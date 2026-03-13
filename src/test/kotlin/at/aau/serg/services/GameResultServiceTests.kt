@@ -54,7 +54,7 @@ class GameResultServiceTests {
     }
 
     @Test
-    fun test_addGameResult_multipleEntries_correctId() {
+    fun test_addGameResult_multipleEntries_correctIdAndSorting() {
         val gameResult1 = GameResult(0, "player1", 17, 15.3)
         val gameResult2 = GameResult(0, "player2", 25, 16.0)
 
@@ -65,11 +65,36 @@ class GameResultServiceTests {
 
         assertEquals(2, res.size)
 
-        assertEquals(gameResult1, res[0])
-        assertEquals(1, res[0].id)
+        assertEquals(gameResult2, res[0])
+        assertEquals(2, res[0].id)
 
-        assertEquals(gameResult2, res[1])
-        assertEquals(2, res[1].id)
+        assertEquals(gameResult1, res[1])
+        assertEquals(1, res[1].id)
+    }
+
+    // New test for tie
+    @Test
+    fun test_getGameResults_tiebreaker_sortByTime() {
+        val gameResult1 = GameResult(0, "player1", 20, 15.3)
+        val gameResult2 = GameResult(0, "player2", 20, 10.0)
+        val gameResult3 = GameResult(0, "player3", 17, 5.3)
+
+        service.addGameResult(gameResult1)
+        service.addGameResult(gameResult2)
+        service.addGameResult(gameResult3)
+
+        val res = service.getGameResults()
+
+        assertEquals(3, res.size)
+
+        assertEquals(gameResult2, res[0])
+        assertEquals(2, res[0].id)
+
+        assertEquals(gameResult1, res[1])
+        assertEquals(1, res[1].id)
+
+        assertEquals(gameResult3, res[2])
+        assertEquals(3, res[2].id)
     }
 
 }

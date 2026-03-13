@@ -17,7 +17,12 @@ class GameResultService {
 
     fun getGameResult(id: Long): GameResult? = gameResults.find { it.id == id } // ? allows null
 
-    fun getGameResults(): List<GameResult> = gameResults.toList() // returns immutable list copy
+    fun getGameResults(): List<GameResult> {
+        return gameResults.sortedWith(
+            compareByDescending<GameResult> {it.score}
+                .thenBy {it.timeInSeconds}
+        )
+    } // returns immutable list copy
 
     /**
      * Kotlin-idiomatic for:
